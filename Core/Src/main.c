@@ -132,6 +132,13 @@ int main(void)
 			TimeOutputLoop = micros();
 			// #001
 
+			 float Kp=1,Ki=0.13;
+				 static int Bias,PWMOut,Last_bias;
+				 Bias=10000-PWMOut;
+				 ADCFeedBack+=Kp*(Bias-Last_bias)+Ki*Bias;
+				 Last_bias=Bias;
+
+
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, PWMOut);
 			volt = (ADCFeedBack*3.3)/4095;
 		}
