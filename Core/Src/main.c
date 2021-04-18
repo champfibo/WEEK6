@@ -89,7 +89,7 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+   HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -132,11 +132,17 @@ int main(void)
 			TimeOutputLoop = micros();
 			// #001
 
-			 float Kp=1,Ki=0.13;
-				 static int Bias,PWMOut,Last_bias;
-				 Bias=10000-PWMOut;
-				 ADCFeedBack+=Kp*(Bias-Last_bias)+Ki*Bias;
-				 Last_bias=Bias;
+			 //float Kp=1,Ki=0.13;
+				// static int Bias,PWMOut,Last_bias;
+				// Bias=10000-PWMOut;
+				// ADCFeedBack+=Kp*(Bias-Last_bias)+Ki*Bias;
+				// Last_bias=Bias;
+			float Position_KP=10,Position_KI=0.2,Position_KD=1;
+				 static float Bias,PWMOut,Integral_bias,Last_Bias;
+				 Bias=1240-ADCFeedBack;                                 //Calculate the deviation
+				 Integral_bias+=Bias;	                                 //Find the integral of the deviation
+				 PWMOut=Position_KP*Bias+Position_KI*Integral_bias+Position_KD*(Bias-Last_Bias);       //Position PID controller
+				 Last_Bias=Bias;
 
 
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, PWMOut);
